@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-export const LoginScreenStyle = StyleSheet.create({
+export const DashboardScreenStyle = StyleSheet.create({
   loginContainer: {
     display: 'flex',
     justifyContent: 'center',
@@ -56,8 +56,5 @@ export const LoginScreenStyle = StyleSheet.create({
   buttonText: {
     fontSize: 28,
     color: 'white',
-  },
-  webviewContainer: {
-    zIndex: 9999,
   },
 });
