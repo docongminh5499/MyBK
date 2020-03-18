@@ -1,7 +1,7 @@
 import React from 'react';
-import {SafeAreaView, ScrollView} from 'react-native';
 import SplashScreen from './Components/SplashScreen/SplashScreen';
 import Login from './Components/Login/Login';
+import Home from './Components/HomePage/Home';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -19,11 +19,7 @@ export default class App extends React.Component {
     }
     return (
       <>
-        <SafeAreaView>
-          <ScrollView contentInsetAdjustmentBehavior="automatic">
-            <Login />
-          </ScrollView>
-        </SafeAreaView>
+        <Home />
       </>
     );
   }
