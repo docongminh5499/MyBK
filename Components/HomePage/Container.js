@@ -1,37 +1,76 @@
 import React, {Component} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {ScaleAndOpacity, TranslateYAndOpacity} from 'react-native-motion';
 import {ContainerStyle, ItemStyle} from './Style';
 
-const Item = ({
-  name = 'My name',
-  icon = require('./icon/diemtrungbinh.png'),
-}) => {
-  return (
-    <TouchableOpacity activeOpacity={0.5} style={ItemStyle.container}>
-      <Image source={icon} style={ItemStyle.icon} />
-      <Text style={ItemStyle.text}>{name}</Text>
-    </TouchableOpacity>
-  );
-};
+class Item extends Component {
+  static defaultProps = {
+    name: 'My name',
+    icon: require('./icon/diemtrungbinh.png'),
+    url: '',
+    navigation: {},
+    animationDelay: 0,
+  };
+
+  render() {
+    const {name, icon, url, navigation} = this.props;
+    const params = {url, title: name};
+
+    return (
+      <ScaleAndOpacity
+        duration={300}
+        delay={this.props.animationDelay}
+        animateOnDidMount={true}
+        style={ItemStyle.containerAnimation}>
+        <TouchableOpacity
+          style={ItemStyle.container}
+          activeOpacity={0.5}
+          onPress={() => navigation.push('detail', params)}>
+          <Image source={icon} style={ItemStyle.icon} />
+          <Text style={ItemStyle.text}>{name}</Text>
+        </TouchableOpacity>
+      </ScaleAndOpacity>
+    );
+  }
+}
 
 export default class Container extends Component {
   static defaultProps = {
     title: 'My title',
     item: [],
+    delay: 0,
   };
 
   render() {
     return (
-      <View style={ContainerStyle.container}>
+      <ScaleAndOpacity
+        style={ContainerStyle.container}
+        delay={this.props.delay}
+        animateOnDidMount={true}
+        scaleMin={1}>
         <View style={ContainerStyle.title}>
-          <Text style={ContainerStyle.titleText}>{this.props.title}</Text>
+          <TranslateYAndOpacity
+            delay={this.props.delay}
+            animateOnDidMount={true}
+            translateYMin={10}
+            duration={300}>
+            <Text style={ContainerStyle.titleText}>{this.props.title}</Text>
+          </TranslateYAndOpacity>
         </View>
+
         <View style={ContainerStyle.content}>
-          {this.props.item.map(item => (
-            <Item name={item.name} key={item.name} icon={item.icon} />
+          {this.props.item.map((item, index) => (
+            <Item
+              animationDelay={this.props.delay + 300 + 100 * index}
+              key={item.name}
+              name={item.name}
+              icon={item.icon}
+              url={item.url}
+              navigation={this.props.navigation}
+            />
           ))}
         </View>
-      </View>
+      </ScaleAndOpacity>
     );
   }
 }
