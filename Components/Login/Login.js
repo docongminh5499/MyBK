@@ -33,8 +33,8 @@ export default class Login extends Component {
 
   componentDidMount() {
     Connect.clearCookies();
-    MyStorage.get('remember').then(data => {
-      this.setState(state => {
+    MyStorage.get('remember').then((data) => {
+      this.setState((state) => {
         state.remember = data;
         data[0] && (state.username = data[0].username);
         data[0] && (state.password = data[0].password);
@@ -44,9 +44,9 @@ export default class Login extends Component {
   }
 
   rememberFunction = () => {
-    MyStorage.get('remember').then(data => {
+    MyStorage.get('remember').then((data) => {
       const {username, password} = this.state;
-      const filter = data.filter(item => {
+      const filter = data.filter((item) => {
         return item.username === username && item.password === password;
       });
       if (filter.length === 0) {
@@ -89,7 +89,7 @@ export default class Login extends Component {
     }
   };
 
-  catchErrorFunction = err => {
+  catchErrorFunction = (err) => {
     this.setState({fetching: false});
     const {set} = this.context.message;
     if (err.name === 'no-network' || err.name === 'unreachable-network') {
@@ -103,11 +103,11 @@ export default class Login extends Component {
   login = () => {
     this.setState({fetching: true}, () => {
       if (this.state.lt && this.state.jsessionid) {
-        this.sendUserData().catch(err => this.catchErrorFunction(err));
+        this.sendUserData().catch((err) => this.catchErrorFunction(err));
       } else {
         this.loadLoginPage()
           .then(() => this.sendUserData())
-          .catch(err => this.catchErrorFunction(err));
+          .catch((err) => this.catchErrorFunction(err));
       }
     });
   };
@@ -126,18 +126,18 @@ export default class Login extends Component {
 
   getAutoCompleteContainer = () => {
     const {showAutoComplete, username, remember} = this.state;
-    const data = remember.filter(item => item.username.includes(username));
+    const data = remember.filter((item) => item.username.includes(username));
     if (showAutoComplete && data.length) {
       return (
         <View style={LoginScreenStyle.autoComplete}>
-          {data.map(item => this.getAutoCompleteElement(item))}
+          {data.map((item) => this.getAutoCompleteElement(item))}
         </View>
       );
     }
     return null;
   };
 
-  onPressAutoCompleteElement = item => {
+  onPressAutoCompleteElement = (item) => {
     this.setState({
       username: item.username,
       password: item.password,
@@ -145,7 +145,7 @@ export default class Login extends Component {
     });
   };
 
-  getAutoCompleteElement = item => {
+  getAutoCompleteElement = (item) => {
     const key = item.name + item.password;
     return (
       <TouchableOpacity
@@ -157,7 +157,7 @@ export default class Login extends Component {
     );
   };
 
-  onUserChangeText = username => {
+  onUserChangeText = (username) => {
     if (this.state.showAutoComplete) {
       this.setState({username});
     } else {
@@ -191,7 +191,7 @@ export default class Login extends Component {
               <TextInput
                 style={LoginScreenStyle.input}
                 placeholder="Tên đăng nhập"
-                onChangeText={username => this.onUserChangeText(username)}
+                onChangeText={(username) => this.onUserChangeText(username)}
                 value={this.state.username}
                 autoCapitalize="none"
                 onBlur={() => this.setState({showAutoComplete: false})}
@@ -208,7 +208,7 @@ export default class Login extends Component {
                 secureTextEntry={this.state.seePassword}
                 style={LoginScreenStyle.input}
                 placeholder="Mật khẩu"
-                onChangeText={password => this.setState({password})}
+                onChangeText={(password) => this.setState({password})}
                 value={this.state.password}
               />
               <Icon

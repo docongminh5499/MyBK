@@ -16,7 +16,7 @@ export default class AppConnector extends React.Component {
 
   componentDidMount() {
     Connect.clearCookies();
-    MyStorage.get('logout').then(data => {
+    MyStorage.get('logout').then((data) => {
       if (data === true || (Array.isArray(data) && data.length === 0)) {
         this.setLoaded = setTimeout(() => this.context.setLoaded(true), 1200);
       } else {
@@ -48,7 +48,7 @@ export default class AppConnector extends React.Component {
     }, 1000);
   };
 
-  catchErrorFunction = err => {
+  catchErrorFunction = (err) => {
     this.error = setTimeout(() => {
       MyStorage.set('logout', true);
       this.context.setLoaded(true);
@@ -58,15 +58,15 @@ export default class AppConnector extends React.Component {
 
   loginAuto = () => {
     this.loadLoginPage()
-      .then(lt =>
+      .then((lt) =>
         Promise.all([
           MyStorage.get('currentUser'),
           MyStorage.get('currentPassword'),
           lt,
         ]),
       )
-      .then(data => this.sendUserData(...data))
-      .catch(err => this.catchErrorFunction(err));
+      .then((data) => this.sendUserData(...data))
+      .catch((err) => this.catchErrorFunction(err));
   };
 
   componentWillUnmount() {

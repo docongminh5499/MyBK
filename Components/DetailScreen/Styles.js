@@ -119,4 +119,37 @@ export const CreateFunctionStyle = StyleSheet.create({
   tkb_even_row: {
     backgroundColor: 'rgba(60, 80, 175, 0.1)',
   },
+  lt_table_head: {
+    flexDirection: 'row',
+  },
+  ngay_cn_bd: {
+    fontSize: 12,
+    color: '#3C50AF',
+    fontFamily: 'Quicksand-Medium',
+    marginTop: 10,
+    paddingTop: 10,
+    width: '100%',
+    textAlign: 'center',
+  },
+  summary_bd: {
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopColor: 'rgba(0, 0, 0, 0.1)',
+    borderTopWidth: 1,
+    paddingHorizontal: 8,
+  },
+  text_summary_bd: {
+    fontFamily: 'Quicksand-Medium',
+    paddingVertical: 4,
+    opacity: 0.6,
+    fontSize: 13,
+  },
+  bd_info_text: {
+    width: '100%',
+    textAlign: 'center',
+    fontFamily: 'Quicksand-Bold',
+    paddingBottom: 7,
+    fontSize: 13,
+    color: '#3C50AF',
+  },
 });

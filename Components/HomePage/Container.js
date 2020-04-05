@@ -13,8 +13,8 @@ class Item extends Component {
   };
 
   render() {
-    const {name, icon, url, navigation} = this.props;
-    const params = {url, title: name};
+    const {name, icon, url, detailKey, navigation} = this.props;
+    const params = {url, title: name, key: detailKey};
 
     return (
       <ScaleAndOpacity
@@ -66,6 +66,7 @@ export default class Container extends Component {
               name={item.name}
               icon={item.icon}
               url={item.url}
+              detailKey={item.key}
               navigation={this.props.navigation}
             />
           ))}

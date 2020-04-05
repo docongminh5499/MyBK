@@ -24,14 +24,7 @@ export default class DetailScreen extends PureComponent {
     this.loading(url, csrf_token);
   }
 
-  getKeyFromTitile = title => {
-    return title
-      .split(' ')
-      .map(e => e[0].toLowerCase())
-      .join('');
-  };
-
-  catchErrorHanding = err => {
+  catchErrorHanding = (err) => {
     this._isMounted &&
       this.setState({error: 'Đã xảy ra lỗi'}, () => {
         const {set} = this.context.message;
@@ -89,8 +82,7 @@ export default class DetailScreen extends PureComponent {
 
   dataSection = () => {
     if (!this.state.error && this.state.data && !this.state.clicked) {
-      const key = this.getKeyFromTitile(this.props.route.params.title);
-      return CreateFunction(this.state.data, key);
+      return CreateFunction(this.state.data, this.props.route.params.key);
     } else if (!this.state.error && !this.state.data && !this.state.clicked) {
       return (
         <View style={DetailScreenStyle.loadingContainer}>
