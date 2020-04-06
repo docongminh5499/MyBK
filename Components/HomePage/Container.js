@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {ScaleAndOpacity, TranslateYAndOpacity} from 'react-native-motion';
 import {ContainerStyle, ItemStyle} from './Style';
 
-class Item extends Component {
+class Item extends PureComponent {
   static defaultProps = {
     name: 'My name',
     icon: require('./icon/diemtrungbinh.png'),
@@ -13,8 +13,9 @@ class Item extends Component {
   };
 
   render() {
-    const {name, icon, url, detailKey, navigation} = this.props;
-    const params = {url, title: name, key: detailKey};
+    const {navigation} = this.props;
+    const {ajaxUrl, getUrl, name, icon, key} = this.props.item;
+    const params = {ajaxUrl, getUrl, key, title: name};
 
     return (
       <ScaleAndOpacity
@@ -34,7 +35,7 @@ class Item extends Component {
   }
 }
 
-export default class Container extends Component {
+export default class Container extends PureComponent {
   static defaultProps = {
     title: 'My title',
     item: [],
@@ -63,10 +64,7 @@ export default class Container extends Component {
             <Item
               animationDelay={this.props.delay + 300 + 100 * index}
               key={item.name}
-              name={item.name}
-              icon={item.icon}
-              url={item.url}
-              detailKey={item.key}
+              item={item}
               navigation={this.props.navigation}
             />
           ))}

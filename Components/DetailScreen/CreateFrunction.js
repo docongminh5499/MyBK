@@ -13,10 +13,12 @@ const mapObject = {
   default: () => {},
 };
 
-export const CreateFunction = (data, key = 'default') => {
+export const CreateFunction = (data, getData, key = 'default') => {
+  // Ajax data will be parsed
+  // Get data will not be parsed (because of containing HTML tags sometimes... )
   if (data && mapObject[key]) {
     const jsonData = JSON.parse(data);
-    return mapObject[key](jsonData);
+    return mapObject[key](jsonData, getData);
   }
   return null;
 };

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {
   View,
   Text,
@@ -18,7 +18,7 @@ import {AppContext} from '../../Context/AppContext';
 import {MyStorage} from '../../Controller/AsyncStorage';
 const logout = require('./icon/logout.png');
 
-export default class Home extends Component {
+export default class Home extends PureComponent {
   static contextType = AppContext;
   _isMounted = false;
 
@@ -39,14 +39,14 @@ export default class Home extends Component {
     this._isMounted = true;
     this.loadingBaseInfo()
       .then(() => this.loadingBaseInfo())
-      .catch(err => console.log(err.message));
+      .catch((err) => console.log(err.message));
   }
 
-  formatString = text => {
+  formatString = (text) => {
     return text
       .split(' ')
-      .filter(e => e)
-      .map(e => e.trim())
+      .filter((e) => e)
+      .map((e) => e.trim())
       .join(' ');
   };
 
@@ -70,21 +70,20 @@ export default class Home extends Component {
   };
 
   logout = () => {
-    this._isMounted &&
-      this.setState({logging_out: true}, () => {
-        Connect.request('https://mybk.hcmut.edu.vn/stinfo/logout')
-          .then(() => Connect.clearCookies())
-          .then(() => {
-            this.context.set({csrf_token: '', login: false});
-            MyStorage.set('logout', true);
-          })
-          .catch(err => {
-            Connect.clearCookies();
-            this.context.set({csrf_token: '', login: false});
-            MyStorage.set('logout', true);
-            console.log(err.message);
-          });
-      });
+    this.setState({logging_out: true}, () => {
+      Connect.request('https://mybk.hcmut.edu.vn/stinfo/logout')
+        .then(() => Connect.clearCookies())
+        .then(() => {
+          this.context.set({csrf_token: '', login: false});
+          MyStorage.set('logout', true);
+        })
+        .catch((err) => {
+          Connect.clearCookies();
+          this.context.set({csrf_token: '', login: false});
+          MyStorage.set('logout', true);
+          console.log(err.message);
+        });
+    });
   };
 
   bannerContent = () => {
@@ -109,7 +108,7 @@ export default class Home extends Component {
     );
   };
 
-  setStatusModal = val => this._isMounted && this.setState({modal: val});
+  setStatusModal = (val) => this._isMounted && this.setState({modal: val});
 
   componentWillUnmount() {
     this._isMounted = false;

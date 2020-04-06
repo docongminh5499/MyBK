@@ -154,8 +154,26 @@ export const CreateFunctionStyle = StyleSheet.create({
     fontSize: 13,
     color: '#3C50AF',
   },
+  bdTitle: {
+    fontFamily: 'Quicksand-Bold',
+    width: '100%',
+    textAlign: 'center',
+    fontSize: 20,
+    paddingVertical: 20,
+    color: '#3C50AF',
+  },
+  bdHeaderText: {
+    fontFamily: 'Quicksand-SemiBold',
+    color: '#3C50AF',
+    paddingLeft: 10,
+    paddingVertical: 5,
+    opacity: 0.7,
+  },
+  bdHeaderValue: {
+    color: 'red',
+  },
   dcContainer: {
-    paddingTop: 30,
+    paddingVertical: 30,
   },
   dcStudentName: {
     fontFamily: 'Quicksand-Regular',
@@ -170,5 +188,21 @@ export const CreateFunctionStyle = StyleSheet.create({
     paddingTop: 20,
     opacity: 0.8,
     fontFamily: 'Quicksand-Bold',
+  },
+  hpText: {
+    fontFamily: 'Quicksand-SemiBold',
+    color: '#3C50AF',
+    paddingVertical: 8,
+    opacity: 0.8,
+    fontSize: 14,
+  },
+  hpWrap: {
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+    borderBottomWidth: 1,
+  },
+  numberHp: {
+    color: 'red',
   },
 });

@@ -14,14 +14,19 @@ export default class DetailScreen extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = {data: '', error: '', clicked: false};
+    this.state = {
+      data: '' /* ajax data */,
+      getData: '' /* data from get request */,
+      error: '',
+      clicked: false,
+    };
   }
 
   componentDidMount() {
     this._isMounted = true;
-    const {url} = this.props.route.params;
+    const {ajaxUrl, getUrl} = this.props.route.params;
     const {csrf_token} = this.context;
-    this.loading(url, csrf_token);
+    this.loading(ajaxUrl, getUrl, csrf_token);
   }
 
   catchErrorHanding = (err) => {
@@ -37,30 +42,43 @@ export default class DetailScreen extends PureComponent {
       });
   };
 
-  loading = async (url, csrf_token) => {
+  loading = async (ajaxUrl, getUrl, csrf_token) => {
     try {
-      if (url === '' || csrf_token === '') {
+      if ((!ajaxUrl && !getUrl) || csrf_token === '') {
         throw new Error();
       }
-      const data = await Connect.request(url, {
-        method: 'POST',
-        headers: {'X-CSRF-TOKEN': csrf_token},
-        body: {_token: csrf_token},
-      });
-      const dataText = await data.text();
-      this._isMounted && this.setState({data: dataText});
+      const [ajaxData, getData] = await Promise.all([
+        Connect.request(ajaxUrl, {
+          method: 'POST',
+          headers: {'X-CSRF-TOKEN': csrf_token},
+          body: {_token: csrf_token},
+        }),
+        Connect.request(getUrl, {
+          method: 'GET',
+          headers: {
+            'X-CSRF-TOKEN': csrf_token,
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        }),
+      ]);
+      const [ajaxDataText, getDataText] = await Promise.all([
+        ajaxData.text(),
+        getData ? getData.text() : '',
+      ]);
+      this._isMounted &&
+        this.setState({data: ajaxDataText, getData: getDataText});
     } catch (err) {
       this.catchErrorHanding(err);
     }
   };
 
   tryAgainButton = () => {
-    const {url} = this.props.route.params;
+    const {ajaxUrl, getUrl} = this.props.route.params;
     const {csrf_token} = this.context;
     this._isMounted &&
       this.setState({error: ''}, () => {
         this.context.message.set(false);
-        this.loading(url, csrf_token);
+        this.loading(ajaxUrl, getUrl, csrf_token);
       });
   };
 
@@ -81,9 +99,12 @@ export default class DetailScreen extends PureComponent {
   };
 
   dataSection = () => {
-    if (!this.state.error && this.state.data && !this.state.clicked) {
-      return CreateFunction(this.state.data, this.props.route.params.key);
-    } else if (!this.state.error && !this.state.data && !this.state.clicked) {
+    const {error, data, getData, clicked} = this.state;
+    const {key} = this.props.route.params;
+
+    if (!error && (data || getData) && !clicked) {
+      return CreateFunction(data, getData, key);
+    } else if (!error && !data && !getData && !clicked) {
       return (
         <View style={DetailScreenStyle.loadingContainer}>
           <ActivityIndicator size="large" color="#3C50AF" />
@@ -95,9 +116,8 @@ export default class DetailScreen extends PureComponent {
   };
 
   backButtonClick = () => {
-    if (!this.state.clicked) {
+    !this.state.clicked &&
       this.setState({clicked: true}, () => this.props.navigation.goBack());
-    }
     return;
   };
 
@@ -106,7 +126,7 @@ export default class DetailScreen extends PureComponent {
   }
 
   render() {
-    const {title = ''} = this.props.route.params;
+    const {title} = this.props.route.params;
     return (
       <View style={DetailScreenStyle.container}>
         <View style={DetailScreenStyle.header}>

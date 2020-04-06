@@ -4,7 +4,11 @@ import {View, Image, Text} from 'react-native';
 import {SplashScreenStyle} from './Styles';
 const image = require('./logo.png');
 
-export default class SplashScreen extends React.PureComponent {
+export default class SplashScreen extends React.Component {
+  shouldComponentUpdate() {
+    return false;
+  }
+
   render() {
     return (
       <View style={SplashScreenStyle.splashContainer}>

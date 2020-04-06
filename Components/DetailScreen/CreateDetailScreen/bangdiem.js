@@ -2,6 +2,15 @@ import React from 'react';
 import {Text, View, ScrollView, FlatList} from 'react-native';
 import {Table, Row} from 'react-native-table-component';
 import {CreateFunctionStyle} from '../Styles';
+import * as Cheerio from 'react-native-cheerio';
+
+function formatString(text) {
+  return text
+    .split(' ')
+    .filter((e) => e)
+    .map((e) => e.trim())
+    .join(' ');
+}
 
 function format_diem_tk(diemtk, diemtl) {
   let diem_tong_ket = diemtk || ' ';
@@ -59,7 +68,8 @@ function createBDTable(data) {
           ))}
         </Table>
       </ScrollView>
-      <Text style={[CreateFunctionStyle.bd_info_text, CreateFunctionStyle.padding]}>
+      <Text
+        style={[CreateFunctionStyle.bd_info_text, CreateFunctionStyle.padding]}>
         {'Tổng kết: ' + data.ten_hocky}
       </Text>
       <Text style={CreateFunctionStyle.ngay_cn_bd}>
@@ -103,14 +113,50 @@ function createBDTable(data) {
   );
 }
 
-function createBD(data) {
+function createHeaderTable(data) {
+  const $ = Cheerio.load(data);
+  const name = $('span[class=blue]').children('b').text() || '';
+
+  const text = $('.home-content-padding > div span').map(function () {
+    return formatString($(this).text());
+  });
+
+  return (
+    <View>
+      <Text style={CreateFunctionStyle.bdTitle}>BẢNG ĐIỂM SINH VIÊN</Text>
+      <Text style={CreateFunctionStyle.bdHeaderText}>
+        {'Họ tên: '}
+        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[0]}</Text>
+      </Text>
+      <Text style={CreateFunctionStyle.bdHeaderText}>
+        {'Số tín chỉ tích lũy: '}
+        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[1]}</Text>
+      </Text>
+      <Text style={CreateFunctionStyle.bdHeaderText}>
+        {'Điểm trung bình tích lũy: '}
+        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[2]}</Text>
+      </Text>
+      <Text style={CreateFunctionStyle.bdHeaderText}>
+        {'Tính đến hết học kỳ: '}
+        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[3]}</Text>
+      </Text>
+      <Text style={CreateFunctionStyle.bdHeaderText}>
+        {'Ngày cập nhật: '}
+        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[4]}</Text>
+      </Text>
+    </View>
+  );
+}
+
+function createBD(ajaxData, getData) {
   return (
     <FlatList
       windowSize={11}
       initialNumToRender={2}
-      data={Object.values(data)}
+      data={Object.values(ajaxData)}
       renderItem={({item}) => createBDTable(item)}
       keyExtractor={(item) => item.ten_hocky}
+      ListHeaderComponent={() => createHeaderTable(getData)}
     />
   );
 }

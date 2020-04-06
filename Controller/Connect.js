@@ -23,14 +23,17 @@ class ConnectController {
   }
 
   async request(url, option) {
-    //Test the network first
-    await this.networkStatus();
-    // If successful connect to network
-    const response = await fetch(url, option);
-    if (response.status >= 400) {
-      throw new MyError('error-server', "Can't send request to server.");
+    if (url) {
+      //Test the network first
+      await this.networkStatus();
+      // If successful connect to network
+      const response = await fetch(url, option);
+      if (response.status >= 400) {
+        throw new MyError('error-server', "Can't send request to server.");
+      }
+      return response;
     }
-    return response;
+    return '';
   }
 
   async load(url, nameParams) {
