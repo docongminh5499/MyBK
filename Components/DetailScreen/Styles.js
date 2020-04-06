@@ -122,12 +122,14 @@ export const CreateFunctionStyle = StyleSheet.create({
   lt_table_head: {
     flexDirection: 'row',
   },
+  padding: {
+    paddingTop: 10,
+    marginTop: 10,
+  },
   ngay_cn_bd: {
     fontSize: 12,
     color: '#3C50AF',
     fontFamily: 'Quicksand-Medium',
-    marginTop: 10,
-    paddingTop: 10,
     width: '100%',
     textAlign: 'center',
   },
@@ -151,5 +153,22 @@ export const CreateFunctionStyle = StyleSheet.create({
     paddingBottom: 7,
     fontSize: 13,
     color: '#3C50AF',
+  },
+  dcContainer: {
+    paddingTop: 30,
+  },
+  dcStudentName: {
+    fontFamily: 'Quicksand-Regular',
+    width: '100%',
+    textAlign: 'center',
+  },
+  dcTitle: {
+    width: '100%',
+    textAlign: 'center',
+    fontSize: 20,
+    paddingBottom: 10,
+    paddingTop: 20,
+    opacity: 0.8,
+    fontFamily: 'Quicksand-Bold',
   },
 });

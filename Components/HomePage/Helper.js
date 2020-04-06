@@ -29,10 +29,15 @@ export const icon = [
       {
         name: 'Điểm chuyển',
         icon: require('./icon/diemchuyen.png'),
-        url: '',
+        url: 'https://mybk.hcmut.edu.vn/stinfo/grade/ajax_grade_diemchuyen',
         key: 'dc',
       },
-      {name: 'Học phí', icon: require('./icon/hocphi.png'), url: '', key: 'hp'},
+      {
+        name: 'Học phí',
+        icon: require('./icon/hocphi.png'),
+        url: 'https://mybk.hcmut.edu.vn/stinfo/hoc-phi/ajax_hocphi',
+        key: 'hp',
+      },
     ],
   },
   {
