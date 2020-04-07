@@ -29,7 +29,7 @@ export default class DetailScreen extends PureComponent {
     this.loading(ajaxUrl, getUrl, csrf_token);
   }
 
-  catchErrorHanding = (err) => {
+  catchErrorHanding = err => {
     this._isMounted &&
       this.setState({error: 'Đã xảy ra lỗi'}, () => {
         const {set} = this.context.message;
@@ -62,7 +62,7 @@ export default class DetailScreen extends PureComponent {
         }),
       ]);
       const [ajaxDataText, getDataText] = await Promise.all([
-        ajaxData.text(),
+        ajaxData ? ajaxData.text() : '',
         getData ? getData.text() : '',
       ]);
       this._isMounted &&

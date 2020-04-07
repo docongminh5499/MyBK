@@ -1,8 +1,10 @@
 import React from 'react';
-import {Text, View, FlatList, ScrollView} from 'react-native';
+import {Text, View, FlatList, ScrollView, Image} from 'react-native';
+import {ScaleAndOpacity} from 'react-native-motion';
 import {Table, Row} from 'react-native-table-component';
 import {CreateFunctionStyle} from '../Styles';
 
+const errorImg = require('../img/error.png');
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
@@ -18,7 +20,8 @@ function createHPTable(data) {
     'GHI CHÚ',
   ];
   const widthArr = [100, 200, 100, 100, 150, 100, 100];
-  const tbody = data.hocphi.map((monhoc) => {
+  const hocphi = data.hocphi && Array.isArray(data.hocphi) ? data.hocphi : [];
+  const tbody = hocphi.map(monhoc => {
     return [
       monhoc.ma_mh,
       monhoc.ten_mh,
@@ -66,6 +69,15 @@ function createHPTable(data) {
           ))}
         </Table>
       </ScrollView>
+
+      {tbody.length === 0 && (
+        <View style={CreateFunctionStyle.emptyItemContainer}>
+          <Text style={CreateFunctionStyle.emptyItemText}>
+            Không có bảng học phí
+          </Text>
+        </View>
+      )}
+
       <View style={CreateFunctionStyle.hpWrap}>
         <Text style={CreateFunctionStyle.hpText}>
           {'Tổng học phí: '}
@@ -107,12 +119,28 @@ function createHPTable(data) {
 }
 
 function createHP(data) {
+  const arrayAjaxData = Object.values(data || {});
+  if (arrayAjaxData.length === 0) {
+    return (
+      <ScaleAndOpacity
+        scaleMin={0}
+        style={CreateFunctionStyle.emptyContainer}
+        animateOnDidMount={true}>
+        <View style={CreateFunctionStyle.emptyImgContainer}>
+          <Image source={errorImg} style={CreateFunctionStyle.emptyImg} />
+        </View>
+        <Text style={CreateFunctionStyle.emptyText}>
+          Không tìm thấy bảng học phí
+        </Text>
+      </ScaleAndOpacity>
+    );
+  }
   return (
     <FlatList
       windowSize={11}
-      data={Object.values(data)}
+      data={arrayAjaxData}
       renderItem={({item}) => createHPTable(item)}
-      keyExtractor={(item) => item.ten_hocky}
+      keyExtractor={(item, index) => item.ten_hocky || index.toString()}
     />
   );
 }

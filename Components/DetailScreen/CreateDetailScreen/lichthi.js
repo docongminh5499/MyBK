@@ -1,11 +1,13 @@
 import React from 'react';
-import {Text, View, ScrollView, FlatList} from 'react-native';
+import {Text, View, ScrollView, FlatList, Image} from 'react-native';
 import {Table, Row, TableWrapper, Cell} from 'react-native-table-component';
 import {CreateFunctionStyle} from '../Styles';
+import {ScaleAndOpacity} from 'react-native-motion';
 
+const errorImg = require('../img/error.png');
 function createLTTable(data) {
   const widthArr = [220, 150, 150, 120, 120, 120, 120, 120, 120];
-  const tbody = Object.values(data.lichthi).map((monhoc) => {
+  const tbody = Object.values(data.lichthi || {}).map(monhoc => {
     return [
       monhoc.ten_mh,
       monhoc.ma_mh,
@@ -71,18 +73,41 @@ function createLTTable(data) {
           ))}
         </Table>
       </ScrollView>
+      {tbody.length === 0 && (
+        <View style={CreateFunctionStyle.emptyItemContainer}>
+          <Text style={CreateFunctionStyle.emptyItemText}>
+            Không có lịch thi
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
 
 function createLT(data) {
+  const arrayData = Object.values(data || {});
+  if (arrayData.length === 0) {
+    return (
+      <ScaleAndOpacity
+        scaleMin={0}
+        style={CreateFunctionStyle.emptyContainer}
+        animateOnDidMount={true}>
+        <View style={CreateFunctionStyle.emptyImgContainer}>
+          <Image source={errorImg} style={CreateFunctionStyle.emptyImg} />
+        </View>
+        <Text style={CreateFunctionStyle.emptyText}>
+          Không tìm thấy lịch thi
+        </Text>
+      </ScaleAndOpacity>
+    );
+  }
   return (
     <FlatList
       windowSize={11}
       initialNumToRender={2}
-      data={Object.values(data)}
+      data={arrayData}
       renderItem={({item}) => createLTTable(item)}
-      keyExtractor={(item) => item.ten_hocky}
+      keyExtractor={(item, index) => item.ten_hocky || index.toString()}
     />
   );
 }

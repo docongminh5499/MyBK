@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, ScrollView} from 'react-native';
+import {Text, View, ScrollView} from 'react-native';
 import {Table, Row} from 'react-native-table-component';
 import {CreateFunctionStyle} from '../Styles';
 import * as Cheerio from 'react-native-cheerio';
@@ -30,8 +30,8 @@ function header() {
 function formatString(text) {
   return text
     .split(' ')
-    .filter((e) => e)
-    .map((e) => e.trim())
+    .filter(e => e)
+    .map(e => e.trim())
     .join(' ');
 }
 
@@ -59,10 +59,13 @@ function createDCRow(data, index) {
 
 function createDC(ajaxData, getData) {
   const $ = Cheerio.load(getData);
-  const name = $('span[class=blue]').children('b').text() || '';
-
+  const name =
+    $('span[class=blue]')
+      .children('b')
+      .text() || '';
+  const arrayData = ajaxData && Array.isArray(ajaxData) ? ajaxData : [];
   return (
-    <ScrollView showsHorizontalScrollIndicator={false}>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <Text style={CreateFunctionStyle.dcTitle}>BẢNG ĐIỂM CHUYỂN</Text>
       <Text style={CreateFunctionStyle.dcStudentName}>
         {formatString(name)}
@@ -73,9 +76,17 @@ function createDC(ajaxData, getData) {
         contentContainerStyle={CreateFunctionStyle.dcContainer}>
         <Table borderStyle={CreateFunctionStyle.tkb_table_style}>
           {header()}
-          {ajaxData.map(createDCRow)}
+          {arrayData.map(createDCRow)}
         </Table>
       </ScrollView>
+
+      {arrayData.length === 0 && (
+        <View style={CreateFunctionStyle.emptyItemContainer}>
+          <Text style={CreateFunctionStyle.emptyItemText}>
+            Không tìm thấy bảng điểm chuyển
+          </Text>
+        </View>
+      )}
     </ScrollView>
   );
 }

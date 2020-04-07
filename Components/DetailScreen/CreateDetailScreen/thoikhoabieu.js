@@ -1,8 +1,10 @@
 import React from 'react';
-import {Text, View, ScrollView, FlatList} from 'react-native';
+import {Text, View, ScrollView, FlatList, Image} from 'react-native';
 import {Table, Row} from 'react-native-table-component';
+import {ScaleAndOpacity} from 'react-native-motion';
 import {CreateFunctionStyle} from '../Styles';
 
+const errorImg = require('../img/error.png');
 function createTKBTable(hocky) {
   const thead = [
     'TÊN MÔN HỌC',
@@ -18,9 +20,9 @@ function createTKBTable(hocky) {
     'TUẦN HỌC',
   ];
   const widthArr = [200, 100, 100, 150, 100, 100, 100, 150, 150, 100, 500];
-  const tbody = [];
-  hocky.tkb.forEach((monhoc) => {
-    tbody.push([
+  const thoi_khoa_bieu = hocky.tkb && Array.isArray(hocky.tkb) ? hocky.tkb : [];
+  const tbody = thoi_khoa_bieu.map(monhoc => {
+    return [
       monhoc.ten_mh,
       monhoc.ma_mh,
       monhoc.so_tin_chi === 0 || !monhoc.so_tin_chi ? '--' : monhoc.so_tin_chi,
@@ -32,7 +34,7 @@ function createTKBTable(hocky) {
       monhoc.phong1 || '--',
       monhoc.macoso || '--',
       monhoc.tuan_hoc,
-    ]);
+    ];
   });
 
   return (
@@ -60,18 +62,40 @@ function createTKBTable(hocky) {
           ))}
         </Table>
       </ScrollView>
+      {tbody.length === 0 && (
+        <View style={CreateFunctionStyle.emptyItemContainer}>
+          <Text style={CreateFunctionStyle.emptyItemText}>
+            Không có thời khóa biểu
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
 
 function createTKB(data) {
+  if (!data || (data && Array.isArray(data) && data.length === 0)) {
+    return (
+      <ScaleAndOpacity
+        scaleMin={0}
+        style={CreateFunctionStyle.emptyContainer}
+        animateOnDidMount={true}>
+        <View style={CreateFunctionStyle.emptyImgContainer}>
+          <Image source={errorImg} style={CreateFunctionStyle.emptyImg} />
+        </View>
+        <Text style={CreateFunctionStyle.emptyText}>
+          Không tìm thấy thời khóa biểu
+        </Text>
+      </ScaleAndOpacity>
+    );
+  }
   return (
     <FlatList
       windowSize={11}
       initialNumToRender={2}
       data={data}
       renderItem={({item}) => createTKBTable(item)}
-      keyExtractor={(item) => item.ten_hocky}
+      keyExtractor={(item, index) => item.ten_hocky || index.toString()}
     />
   );
 }

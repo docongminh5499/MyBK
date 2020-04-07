@@ -83,6 +83,41 @@ export const DetailScreenStyle = StyleSheet.create({
 });
 
 export const CreateFunctionStyle = StyleSheet.create({
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyImgContainer: {
+    width: 65,
+    height: 50,
+  },
+  emptyImg: {
+    width: '100%',
+    height: '100%',
+    opacity: 0.8,
+  },
+  emptyText: {
+    fontFamily: 'Quicksand-Bold',
+    fontSize: 20,
+    width: '100%',
+    textAlign: 'center',
+    paddingHorizontal: 10,
+    paddingTop: 30,
+    opacity: 0.6,
+  },
+  emptyItemContainer: {
+    width: '100%',
+    paddingVertical: 20,
+    paddingHorizontal: 5,
+  },
+  emptyItemText: {
+    width: '100%',
+    textAlign: 'center',
+    fontFamily: 'Quicksand-SemiBold',
+    fontSize: 18,
+    opacity: 0.6,
+  },
   tkb_wrapper: {
     marginVertical: 20,
     paddingHorizontal: 5,
@@ -204,5 +239,97 @@ export const CreateFunctionStyle = StyleSheet.create({
   },
   numberHp: {
     color: 'red',
+  },
+  ttsvHeader: {
+    width: '100%',
+    paddingVertical: 30,
+    paddingHorizontal: 10,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  ttsvHeaderText: {
+    fontFamily: 'Quicksand-Bold',
+    fontSize: 16,
+    color: '#3C50AF',
+  },
+  ttsvHeaderStatus: {
+    color: 'red',
+  },
+  ttsvText: {
+    fontFamily: 'Quicksand-Regular',
+    paddingHorizontal: 5,
+    paddingVertical: 8,
+  },
+  ttsvItemHeader: {
+    backgroundColor: 'gray',
+    color: 'white',
+    fontFamily: 'Quicksand-Bold',
+  },
+  ttsvEmpty: {
+    width: '100%',
+    textAlign: 'center',
+    fontFamily: 'Quicksand-Bold',
+    paddingHorizontal: 5,
+    paddingVertical: 20,
+    opacity: 0.6,
+  },
+  ttsvValue: {
+    fontFamily: 'Quicksand-SemiBold',
+  },
+  titleLL: {
+    width: '100%',
+    backgroundColor: '#3C50AF',
+  },
+  titleLLText: {
+    fontFamily: 'Quicksand-Bold',
+    textTransform: 'uppercase',
+    color: 'white',
+    textAlign: 'center',
+    width: '100%',
+    fontSize: 16,
+    paddingVertical: 8,
+  },
+  subTitleLL: {
+    paddingVertical: 8,
+    paddingHorizontal: 5,
+    borderBottomWidth: 0.2,
+    borderTopWidth: 0.2,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  subTitleTextLL: {
+    fontFamily: 'Quicksand-SemiBold',
+    width: '100%',
+    textAlign: 'center',
+    color: '#3C50AF',
+  },
+  subValueTextLL: {
+    width: '100%',
+    fontFamily: 'Quicksand-Regular',
+  },
+  normalLLContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 8,
+    borderBottomWidth: 0.2,
+    borderTopWidth: 0.2,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  normalThLL: {
+    width: '35%',
+  },
+  normalTdLL: {
+    width: '65%',
+  },
+  normalThTextLL: {
+    width: '100%',
+    fontFamily: 'Quicksand-SemiBold',
+  },
+  normalTdTextLL: {
+    width: '100%',
+    fontFamily: 'Quicksand-Regular',
+    paddingLeft: 10,
   },
 });

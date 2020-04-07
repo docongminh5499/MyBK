@@ -1,14 +1,16 @@
 import React from 'react';
-import {Text, View, ScrollView, FlatList} from 'react-native';
+import {Text, View, ScrollView, FlatList, Image} from 'react-native';
 import {Table, Row} from 'react-native-table-component';
+import {ScaleAndOpacity} from 'react-native-motion';
 import {CreateFunctionStyle} from '../Styles';
 import * as Cheerio from 'react-native-cheerio';
 
+const errorImg = require('../img/error.png');
 function formatString(text) {
   return text
     .split(' ')
-    .filter((e) => e)
-    .map((e) => e.trim())
+    .filter(e => e)
+    .map(e => e.trim())
     .join(' ');
 }
 
@@ -31,7 +33,7 @@ function createBDTable(data) {
 
   const widthArr = [100, 150, 100, 100, 250, 100, 100];
 
-  const tbody = Object.values(data.diem).map((monhoc) => {
+  const tbody = Object.values(data.diem || {}).map(monhoc => {
     return [
       monhoc.ma_mh,
       monhoc.ten_mh,
@@ -68,6 +70,15 @@ function createBDTable(data) {
           ))}
         </Table>
       </ScrollView>
+
+      {tbody.length === 0 && (
+        <View style={CreateFunctionStyle.emptyItemContainer}>
+          <Text style={CreateFunctionStyle.emptyItemText}>
+            Không có bảng điểm
+          </Text>
+        </View>
+      )}
+
       <Text
         style={[CreateFunctionStyle.bd_info_text, CreateFunctionStyle.padding]}>
         {'Tổng kết: ' + data.ten_hocky}
@@ -114,10 +125,12 @@ function createBDTable(data) {
 }
 
 function createHeaderTable(data) {
-  const $ = Cheerio.load(data);
-  const name = $('span[class=blue]').children('b').text() || '';
+  if (!data) {
+    return <Text style={CreateFunctionStyle.bdTitle}>BẢNG ĐIỂM SINH VIÊN</Text>;
+  }
 
-  const text = $('.home-content-padding > div span').map(function () {
+  const $ = Cheerio.load(data);
+  const text = $('.home-content-padding > div span').map(function() {
     return formatString($(this).text());
   });
 
@@ -126,36 +139,52 @@ function createHeaderTable(data) {
       <Text style={CreateFunctionStyle.bdTitle}>BẢNG ĐIỂM SINH VIÊN</Text>
       <Text style={CreateFunctionStyle.bdHeaderText}>
         {'Họ tên: '}
-        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[0]}</Text>
+        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[0] || '--'}</Text>
       </Text>
       <Text style={CreateFunctionStyle.bdHeaderText}>
         {'Số tín chỉ tích lũy: '}
-        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[1]}</Text>
+        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[1] || '--'}</Text>
       </Text>
       <Text style={CreateFunctionStyle.bdHeaderText}>
         {'Điểm trung bình tích lũy: '}
-        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[2]}</Text>
+        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[2] || '--'}</Text>
       </Text>
       <Text style={CreateFunctionStyle.bdHeaderText}>
         {'Tính đến hết học kỳ: '}
-        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[3]}</Text>
+        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[3] || '--'}</Text>
       </Text>
       <Text style={CreateFunctionStyle.bdHeaderText}>
         {'Ngày cập nhật: '}
-        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[4]}</Text>
+        <Text style={CreateFunctionStyle.bdHeaderValue}>{text[4] || '--'}</Text>
       </Text>
     </View>
   );
 }
 
 function createBD(ajaxData, getData) {
+  const arrayAjaxData = Object.values(ajaxData || {});
+  if (arrayAjaxData.length === 0) {
+    return (
+      <ScaleAndOpacity
+        scaleMin={0}
+        style={CreateFunctionStyle.emptyContainer}
+        animateOnDidMount={true}>
+        <View style={CreateFunctionStyle.emptyImgContainer}>
+          <Image source={errorImg} style={CreateFunctionStyle.emptyImg} />
+        </View>
+        <Text style={CreateFunctionStyle.emptyText}>
+          Không tìm thấy bảng điểm
+        </Text>
+      </ScaleAndOpacity>
+    );
+  }
   return (
     <FlatList
       windowSize={11}
       initialNumToRender={2}
-      data={Object.values(ajaxData)}
+      data={arrayAjaxData}
       renderItem={({item}) => createBDTable(item)}
-      keyExtractor={(item) => item.ten_hocky}
+      keyExtractor={(item, index) => item.ten_hocky || index.toString()}
       ListHeaderComponent={() => createHeaderTable(getData)}
     />
   );

@@ -21,12 +21,12 @@ export const icon = [
         getUrl: 'https://mybk.hcmut.edu.vn/stinfo/grade',
         key: 'bd',
       },
-      {
-        name: 'Thông báo',
-        icon: require('./icon/thongbao.png'),
-        ajaxUrl: '',
-        key: 'tb',
-      },
+      // {
+      //   name: 'Thông báo',
+      //   icon: require('./icon/thongbao.png'),
+      //   ajaxUrl: 'https://mybk.hcmut.edu.vn/stinfo/message/data',
+      //   key: 'tb',
+      // },
       {
         name: 'Điểm chuyển',
         icon: require('./icon/diemchuyen.png'),
@@ -48,13 +48,14 @@ export const icon = [
       {
         name: 'Lý lịch',
         icon: require('./icon/lylich.png'),
-        ajaxUrl: '',
+        getUrl: 'https://mybk.hcmut.edu.vn/stinfo/profile',
         key: 'll',
       },
       {
         name: 'Tình trạng sinh viên',
         icon: require('./icon/tinhtrang.png'),
-        ajaxUrl: '',
+        ajaxUrl: 'https://mybk.hcmut.edu.vn/stinfo/qd/ajax_qd',
+        getUrl: 'https://mybk.hcmut.edu.vn/stinfo/qd',
         key: 'ttsv',
       },
     ],
