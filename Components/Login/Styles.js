@@ -2,62 +2,100 @@ import {StyleSheet} from 'react-native';
 
 export const LoginScreenStyle = StyleSheet.create({
   loginContainer: {
+    position: 'relative',
+    zIndex: 3,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
     width: '100%',
-    backgroundColor: '#ffffff',
   },
   loginForm: {
-    flex: 2,
-    fontSize: 14,
-  },
-  logoContainer: {
-    flex: 3,
+    width: '80%',
+    minWidth: 250,
+    paddingVertical: 10,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  inputLabel: {
-    fontSize: 16,
-  },
-  logo: {
-    height: 150,
-    width: 150,
+  logoContainer: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 50,
   },
   loginButton: {
     height: 50,
-    width: 300,
-    borderRadius: 30,
-    backgroundColor: '#0795df',
+    width: '100%',
+    borderRadius: 5,
+    backgroundColor: '#3C50AF',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    marginVertical: 20,
   },
   inputContainer: {
     marginBottom: 20,
+    flexDirection: 'row',
+    width: '100%',
+    backgroundColor: '#efefef',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 3,
+    zIndex: 0,
   },
   input: {
-    backgroundColor: '#f9f9f9',
-    paddingLeft: 8,
-  },
-  footer: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
-    paddingBottom: 10,
+    fontFamily: 'Quicksand-Medium',
+  },
+  inputIcon: {
+    fontSize: 18,
+    width: 40,
+    paddingHorizontal: 8,
+    color: '#3C50AF',
   },
   title: {
-    fontSize: 48,
+    fontSize: 36,
+    color: '#3C50AF',
+    fontFamily: 'Quicksand-Bold',
   },
-
+  slogan: {
+    paddingVertical: 5,
+    fontSize: 18,
+    color: '#3C50AF',
+    fontFamily: 'Quicksand-SemiBold',
+  },
   buttonText: {
-    fontSize: 28,
+    fontSize: 18,
+    fontFamily: 'Quicksand-Bold',
     color: 'white',
   },
-  webviewContainer: {
-    zIndex: 9999,
+  rememberMe: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rememberMeText: {
+    fontSize: 12,
+    fontFamily: 'Quicksand-Medium',
+  },
+  autoComplete: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    zIndex: 3,
+    left: 0,
+    top: 60,
+    width: '100%',
+  },
+  autoElement: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  autoCompleteText: {
+    fontFamily: 'Quicksand-Medium',
+    opacity: 0.6,
   },
 });

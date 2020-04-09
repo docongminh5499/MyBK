@@ -2,183 +2,251 @@ import React, {Component} from 'react';
 import {
   View,
   Text,
-  Image,
   TextInput,
   TouchableOpacity,
-  Button,
+  ActivityIndicator,
 } from 'react-native';
+import {TranslateYAndOpacity, ScaleAndOpacity} from 'react-native-motion';
+import CheckBox from '@react-native-community/checkbox';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {Connect} from '../../Controller/Connect';
 import {LoginScreenStyle} from './Styles';
-import CookieManager from '@react-native-community/cookies';
-const cheerio = require('react-native-cheerio');
+import {AppContext} from '../../Context/AppContext';
+import Notification from '../Notification/Notification';
+import {MyStorage} from '../../Controller/AsyncStorage';
 
 export default class Login extends Component {
-  constructor() {
-    super();
+  static contextType = AppContext;
+
+  constructor(props) {
+    super(props);
     this.state = {
-      username: 'phuc.nguyen.k17',
-      password: 'Youre=nothing46',
-      isLoggedIn: false,
-      statusColor: '#428AF8',
+      username: '',
+      password: '',
+      seePassword: true,
+      rememberMe: false,
+      fetching: false,
+      showAutoComplete: false,
+      remember: [],
     };
   }
-  login = () => {
-    this.sendUserData();
-  };
-  logout = async () => {
-    try {
-      await fetch('https://mybk.hcmut.edu.vn/stinfo/logout');
-      await CookieManager.clearAll();
-      this.setState({isLoggedIn: false});
-      this.loadLoginPage()
-        .then(({lt}) => {
-          this.setState({lt});
-        })
-        .catch(console.error);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  sendUserData = async () => {
-    if (this.state.isLoggedIn) {
-      console.log('already logged in');
-      return null;
-    }
-    try {
-      const url = 'https://sso.hcmut.edu.vn/cas/login';
-      const data = await fetch(url, {
-        method: 'POST',
-        headers: {
-          Accept:
-            'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Origin: 'https://sso.hcmut.edu.vn',
-          'User-Agent':
-            'Mozilla/5.0 (X11; Linux x86_64; rv:73.0) Gecko/20100101 Firefox/73.0',
-          'Accept-Encoding': 'gzip, deflate, br',
-          Host: 'sso.hcmut.edu.vn',
-          Referer: 'https://sso.hcmut.edu.vn/cas/login',
-          DNT: '1',
-          'Content-Length': '140',
-          'Accept-Language': 'en-US,en;q=0.8,vi-VN;q=0.5,vi;q=0.3',
-          'Cache-Control': 'no-cache',
-          Connection: 'keep-alive',
-          Pragma: 'no-cache',
-          'Upgrade-Insecure-Requests': '1',
-        },
-        body: `username=${this.state.username}&password=${this.state.password}&lt=${this.state.lt}&execution=e1s1&_eventId=submit&submit=Login`,
+
+  componentDidMount() {
+    Connect.clearCookies();
+    MyStorage.get('remember').then((data) => {
+      this.setState((state) => {
+        state.remember = data;
+        data[0] && (state.username = data[0].username);
+        data[0] && (state.password = data[0].password);
+        return state;
       });
-      const htmlString = await data.text();
-      const $ = cheerio.load(htmlString);
-      const loginStatus = $('#msg').text();
-      if (loginStatus.includes('Log In Successful')) {
-        this.setState({isLoggedIn: true});
-        console.log('log in successful');
-        // this.props.navigation.navigate('dashboard');
-      } else {
-        this.setState({statusColor: 'red'});
-        console.log('Log in failed');
+    });
+  }
+
+  rememberFunction = () => {
+    MyStorage.get('remember').then((data) => {
+      const {username, password} = this.state;
+      const filter = data.filter((item) => {
+        return item.username === username && item.password === password;
+      });
+      if (filter.length === 0) {
+        const shiftData = {username, password};
+        data.unshift(shiftData);
+        MyStorage.set('remember', data.slice(0, 4));
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  loadLoginPage = async () => {
-    let lt;
-    try {
-      const url = 'https://sso.hcmut.edu.vn/cas/login';
-      const response = await fetch(url);
-      const htmlString = await response.text();
-      const $ = cheerio.load(htmlString);
-      const x = $('input[name=lt]');
-      console.log(x);
-      lt = $('input[name=lt]').attr('value');
-      return {lt};
-    } catch (error) {
-      console.error(error);
-    } finally {
-      return {lt};
-    }
-  };
-  validateAndSetPassword = password => {
-    this.setState({password, statusColor: '#428AF8'});
+      return;
+    });
   };
 
-  validateAndSetUsername = username => {
-    this.setState({username, statusColor: '#428AF8'});
+  loadLoginPage = async () => {
+    const paramsLogin = {lt: 'input[name=lt]'};
+    const url = 'https://sso.hcmut.edu.vn/cas/login';
+    const data = await Connect.load(url, paramsLogin);
+    this.setState({
+      lt: data.params.lt.attr('value'),
+      jsessionid: data.cookies.JSESSIONID,
+    });
   };
-  fetchStinfo = async () => {
-    const data = await fetch('https://mybk.hcmut.edu.vn/stinfo');
-    const htmlString = await data.text();
-    const $ = cheerio.load(htmlString);
-    const token = $('meta[name=_token]').attr('content');
-    const grade = await fetch(
-      'https://mybk.hcmut.edu.vn/stinfo/grade/ajax_grade',
-      {
-        method: 'POST',
-        headers: {
-          'X-CSRF-TOKEN': token,
-        },
-      },
+
+  sendUserData = async () => {
+    const data = await Connect.request('https://sso.hcmut.edu.vn/cas/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: `username=${this.state.username}&password=${this.state.password}&lt=${this.state.lt}&execution=e1s1&_eventId=submit&submit=Login`,
+    });
+
+    const dataText = await data.text();
+    if (dataText.includes('Log In Successful')) {
+      MyStorage.set('currentUser', this.state.username);
+      MyStorage.set('currentPassword', this.state.password);
+      MyStorage.set('logout', false);
+      this.state.rememberMe && this.rememberFunction();
+      this.context.setLogin(true);
+    } else {
+      this.setState({fetching: false});
+      const message = 'Incorrect username or password';
+      this.context.message.set(true, 'Error', message, 'error');
+    }
+  };
+
+  catchErrorFunction = (err) => {
+    this.setState({fetching: false});
+    const {set} = this.context.message;
+    if (err.name === 'no-network' || err.name === 'unreachable-network') {
+      set(true, 'Network Error', err.message, 'error');
+    } else {
+      const message = 'Sorry, something went wrong.';
+      set(true, 'System Error', message, 'error');
+    }
+  };
+
+  login = () => {
+    this.setState({fetching: true}, () => {
+      if (this.state.lt && this.state.jsessionid) {
+        this.sendUserData().catch((err) => this.catchErrorFunction(err));
+      } else {
+        this.loadLoginPage()
+          .then(() => this.sendUserData())
+          .catch((err) => this.catchErrorFunction(err));
+      }
+    });
+  };
+
+  toggleSeePassword = () =>
+    this.setState({seePassword: !this.state.seePassword});
+  toggleRememberMe = () => this.setState({rememberMe: !this.state.rememberMe});
+
+  getLoginButton = () => {
+    if (this.state.fetching) {
+      return <ActivityIndicator size="large" color="white" />;
+    } else {
+      return <Text style={LoginScreenStyle.buttonText}>ĐĂNG NHẬP</Text>;
+    }
+  };
+
+  getAutoCompleteContainer = () => {
+    const {showAutoComplete, username, remember} = this.state;
+    const data = remember.filter((item) => item.username.includes(username));
+    if (showAutoComplete && data.length) {
+      return (
+        <View style={LoginScreenStyle.autoComplete}>
+          {data.map((item) => this.getAutoCompleteElement(item))}
+        </View>
+      );
+    }
+    return null;
+  };
+
+  onPressAutoCompleteElement = (item) => {
+    this.setState({
+      username: item.username,
+      password: item.password,
+      showAutoComplete: false,
+    });
+  };
+
+  getAutoCompleteElement = (item) => {
+    const key = item.name + item.password;
+    return (
+      <TouchableOpacity
+        key={key}
+        style={LoginScreenStyle.autoElement}
+        onPress={() => this.onPressAutoCompleteElement(item)}>
+        <Text style={LoginScreenStyle.autoCompleteText}>{item.username}</Text>
+      </TouchableOpacity>
     );
-    const gradeData = await grade.json();
-    console.log(gradeData);
   };
-  componentDidMount() {
-    this.loadLoginPage()
-      .then(({lt}) => {
-        this.setState({lt});
-      })
-      .catch(console.error);
-  }
+
+  onUserChangeText = (username) => {
+    if (this.state.showAutoComplete) {
+      this.setState({username});
+    } else {
+      this.setState({username, showAutoComplete: true});
+    }
+  };
+
   render() {
     return (
-      <>
-        <View style={LoginScreenStyle.loginContainer}>
-          <View style={LoginScreenStyle.logoContainer}>
-            <Image
-              source={require('./LogoBK.jpg')}
-              style={LoginScreenStyle.logo}
-            />
-            <Text style={LoginScreenStyle.title}>MyBK</Text>
-          </View>
-          <View style={LoginScreenStyle.loginForm}>
+      <View style={LoginScreenStyle.loginContainer}>
+        <Notification {...this.context.message} />
+        <View style={LoginScreenStyle.logoContainer}>
+          <TranslateYAndOpacity animateOnDidMount={true} translateYMin={10}>
+            <Text style={LoginScreenStyle.title}>MyBK App</Text>
+          </TranslateYAndOpacity>
+          <TranslateYAndOpacity
+            animateOnDidMount={true}
+            translateYMin={5}
+            delay={800}>
+            <Text style={LoginScreenStyle.slogan}>Welcome back!</Text>
+          </TranslateYAndOpacity>
+        </View>
+        <View style={LoginScreenStyle.loginForm}>
+          {this.getAutoCompleteContainer()}
+          <TranslateYAndOpacity
+            animateOnDidMount={true}
+            translateYMin={4}
+            delay={300}>
             <View style={LoginScreenStyle.inputContainer}>
-              {/* <Image source="" style={LoginScreenStyle.userIcon} /> */}
+              <Icon name="user-alt" style={LoginScreenStyle.inputIcon} />
               <TextInput
                 style={LoginScreenStyle.input}
-                placeholder="Username"
-                selectionColor="#428AF8"
-                underlineColorAndroid={this.state.statusColor}
-                onChangeText={this.validateAndSetUsername}
+                placeholder="Tên đăng nhập"
+                onChangeText={(username) => this.onUserChangeText(username)}
                 value={this.state.username}
+                autoCapitalize="none"
+                onBlur={() => this.setState({showAutoComplete: false})}
               />
             </View>
+          </TranslateYAndOpacity>
+          <TranslateYAndOpacity
+            animateOnDidMount={true}
+            translateYMin={4}
+            delay={300}>
             <View style={LoginScreenStyle.inputContainer}>
-              <Image source="" style={LoginScreenStyle.passwordIcon} />
+              <Icon name="lock" style={LoginScreenStyle.inputIcon} />
               <TextInput
-                secureTextEntry={true}
+                secureTextEntry={this.state.seePassword}
                 style={LoginScreenStyle.input}
-                placeholder="Password"
-                selectionColor="#428AF8"
-                underlineColorAndroid={this.state.statusColor}
-                onChangeText={this.validateAndSetPassword}
+                placeholder="Mật khẩu"
+                onChangeText={(password) => this.setState({password})}
                 value={this.state.password}
               />
+              <Icon
+                name={this.state.seePassword ? 'eye' : 'eye-slash'}
+                onPress={this.toggleSeePassword}
+                style={LoginScreenStyle.inputIcon}
+              />
             </View>
+          </TranslateYAndOpacity>
+          <TranslateYAndOpacity
+            delay={300}
+            animateOnDidMount={true}
+            translateYMin={5}>
             <TouchableOpacity
+              style={LoginScreenStyle.rememberMe}
+              onPress={this.toggleRememberMe}>
+              <CheckBox
+                tintColors={{true: '#3C50AF', false: '#3C50AF'}}
+                value={this.state.rememberMe}
+                onChange={this.toggleRememberMe}
+              />
+              <Text style={LoginScreenStyle.rememberMeText}>Nhớ mật khẩu</Text>
+            </TouchableOpacity>
+          </TranslateYAndOpacity>
+          <ScaleAndOpacity
+            style={LoginScreenStyle.loginButton}
+            animateOnDidMount={true}
+            delay={300}
+            duration={400}>
+            <TouchableOpacity
+              disabled={this.state.fetching}
               style={LoginScreenStyle.loginButton}
               onPress={this.login}>
-              <Text style={LoginScreenStyle.buttonText}>Login</Text>
+              {this.getLoginButton()}
             </TouchableOpacity>
-          </View>
-          <View style={LoginScreenStyle.footer}>
-            <Text>Footer text</Text>
-            <Button onPress={this.logout} title="Logout" />
-
-            <Button onPress={this.fetchStinfo} title="Fetch" />
-          </View>
+          </ScaleAndOpacity>
         </View>
-      </>
+      </View>
     );
   }
 }
