@@ -6,7 +6,10 @@ import createHP from './CreateDetailScreen/hocphi';
 //import createTB from './CreateDetailScreen/thongbao';
 import createLL from './CreateDetailScreen/lylich';
 import createTTSV from './CreateDetailScreen/tinhtrangsinhvien';
-
+import createKQTS from './CreateDetailScreen/ketquatuyensinh';
+import createDTB from './CreateDetailScreen/diemtrungbinh';
+import createSTC from './CreateDetailScreen/sotinchi';
+import createBTN from './CreateDetailScreen/bangtotnghiep';
 const mapObject = {
   tkb: createTKB,
   lt: createLT,
@@ -16,6 +19,10 @@ const mapObject = {
   //tb: createTB,
   ll: createLL,
   ttsv: createTTSV,
+  kqts: createKQTS,
+  dtb: createDTB,
+  stc: createSTC,
+  btn: createBTN,
   default: () => {},
 };
 
