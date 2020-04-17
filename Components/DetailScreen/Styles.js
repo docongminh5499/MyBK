@@ -148,7 +148,6 @@ export const CreateFunctionStyle = StyleSheet.create({
   tkb_body_text: {
     fontFamily: 'Quicksand-Medium',
     padding: 10,
-    textAlign: 'center',
     opacity: 0.6,
   },
   tkb_even_row: {
@@ -331,5 +330,26 @@ export const CreateFunctionStyle = StyleSheet.create({
     width: '100%',
     fontFamily: 'Quicksand-Regular',
     paddingLeft: 10,
+  },
+  bangtotnghiep: {
+    fontSize: 22,
+    textAlign: 'center',
+  },
+  btnFailed: {
+    color: 'red',
+  },
+  dtbText: {
+    fontSize: 22,
+    textAlign: 'center',
+  },
+  chartText: {
+    fontSize: 22,
+    textAlign: 'center',
+  },
+  dtbTableText: {
+    textAlign: 'center',
+    fontFamily: 'Quicksand-Medium',
+    padding: 10,
+    opacity: 0.6,
   },
 });
