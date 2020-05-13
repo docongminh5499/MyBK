@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler';
+
 import React from 'react';
 import AppConnector from './Components/AppConnector/AppConnector';
 import {AppContext} from './Context/AppContext';
@@ -59,4 +61,6 @@ export default class App extends React.Component {
       </AppContext.Provider>
     );
   }
+  /*
+   */
 }

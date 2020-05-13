@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import {ScaleAndOpacity} from 'react-native-motion';
 import Notification from '../Notification/Notification';
 import {Connect} from '../../Controller/Connect';
-import {CreateFunction} from './CreateFrunction';
+import {CreateFunction} from './CreateFunction';
 import {AppContext} from '../../Context/AppContext';
 import {DetailScreenStyle} from './Styles';
 

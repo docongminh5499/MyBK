@@ -66,13 +66,13 @@ export const icon = [
       {
         name: 'Điểm trung bình',
         icon: require('./icon/diemtrungbinh.png'),
-        ajaxUrl: '',
+        ajaxUrl: 'https://mybk.hcmut.edu.vn/stinfo/grade/ajax_grade',
         key: 'dtb',
       },
       {
         name: 'Số tín chỉ',
         icon: require('./icon/sotinchi.png'),
-        ajaxUrl: '',
+        ajaxUrl: 'https://mybk.hcmut.edu.vn/stinfo/grade/ajax_grade',
         key: 'stc',
       },
     ],
@@ -83,7 +83,7 @@ export const icon = [
       {
         name: 'Kết quả tuyển sinh',
         icon: require('./icon/ketquatuyensinh.png'),
-        ajaxUrl: '',
+        getUrl: 'https://mybk.hcmut.edu.vn/stinfo/ketqua_tuyensinh',
         key: 'kqts',
       },
     ],
@@ -94,14 +94,8 @@ export const icon = [
       {
         name: 'Bằng tốt nghiệp',
         icon: require('./icon/bangtotnghiep.png'),
-        ajaxUrl: '',
+        getUrl: 'https://mybk.hcmut.edu.vn/stinfo/ketqua_totnghiep',
         key: 'btn',
-      },
-      {
-        name: 'Tiến độ học tập',
-        icon: require('./icon/tiendohoctap.png'),
-        ajaxUrl: '',
-        key: 'tdht',
       },
     ],
   },
