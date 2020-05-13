@@ -1,0 +1,101 @@
+import {StyleSheet} from 'react-native';
+
+export const LoginScreenStyle = StyleSheet.create({
+  loginContainer: {
+    position: 'relative',
+    zIndex: 3,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+  },
+  loginForm: {
+    width: '80%',
+    minWidth: 250,
+    paddingVertical: 10,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoContainer: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 50,
+  },
+  loginButton: {
+    height: 50,
+    width: '100%',
+    borderRadius: 5,
+    backgroundColor: '#3C50AF',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  inputContainer: {
+    marginBottom: 20,
+    flexDirection: 'row',
+    width: '100%',
+    backgroundColor: '#efefef',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 3,
+    zIndex: 0,
+  },
+  input: {
+    flex: 1,
+    fontFamily: 'Quicksand-Medium',
+  },
+  inputIcon: {
+    fontSize: 18,
+    width: 40,
+    paddingHorizontal: 8,
+    color: '#3C50AF',
+  },
+  title: {
+    fontSize: 36,
+    color: '#3C50AF',
+    fontFamily: 'Quicksand-Bold',
+  },
+  slogan: {
+    paddingVertical: 5,
+    fontSize: 18,
+    color: '#3C50AF',
+    fontFamily: 'Quicksand-SemiBold',
+  },
+  buttonText: {
+    fontSize: 18,
+    fontFamily: 'Quicksand-Bold',
+    color: 'white',
+  },
+  rememberMe: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rememberMeText: {
+    fontSize: 12,
+    fontFamily: 'Quicksand-Medium',
+  },
+  autoComplete: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    zIndex: 3,
+    left: 0,
+    top: 60,
+    width: '100%',
+  },
+  autoElement: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  autoCompleteText: {
+    fontFamily: 'Quicksand-Medium',
+    opacity: 0.6,
+  },
+});
